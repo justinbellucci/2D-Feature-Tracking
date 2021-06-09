@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <vector>
 #include <cmath>
+#include <memory>
 #include <limits>
 #include <opencv2/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -60,9 +61,11 @@ int main(int argc, const char *argv[])
         //// TASK MP.1 -> replace the following code with ring buffer of size dataBufferSize
 
         // push image into data frame buffer
-        DataFrame frame;
-        frame.cameraImg = imgGray;
-        dataBuffer.push_back(frame);
+        // DataFrame frame;
+        std::unique_ptr<DataFrame> frame(new DataFrame);
+        frame->cameraImg = imgGray;
+        // frame.cameraImg = imgGray;
+        dataBuffer.push_back(*frame);
 
         //// EOF STUDENT ASSIGNMENT
         cout << "#1 : LOAD IMAGE INTO BUFFER done" << endl;
