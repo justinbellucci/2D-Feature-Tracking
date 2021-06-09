@@ -6,6 +6,7 @@
 #include <vector>
 #include <cmath>
 #include <memory>
+#include <queue>
 #include <limits>
 #include <opencv2/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -38,7 +39,8 @@ int main(int argc, const char *argv[])
 
     // misc
     int dataBufferSize = 2;       // no. of images which are held in memory (ring buffer) at the same time
-    vector<DataFrame> dataBuffer; // list of data frames which are held in memory at the same time
+    std::vector<DataFrame> dataBuffer; // list of data frames which are held in memory at the same time
+    std::queue<DataFrame> dataBufferQ; // TODO:
     bool bVis = false;            // visualize results
 
     /* MAIN LOOP OVER ALL IMAGES */
@@ -66,6 +68,9 @@ int main(int argc, const char *argv[])
         frame->cameraImg = imgGray;
         // frame.cameraImg = imgGray;
         dataBuffer.push_back(*frame);
+        dataBufferQ.emplace(*frame); // TODO: implment a buffer size of dataBufferSize to limit queue capacity
+        // dataBuffer.front()
+        // dataBuffer.pop()
 
         //// EOF STUDENT ASSIGNMENT
         cout << "#1 : LOAD IMAGE INTO BUFFER done" << endl;
@@ -118,7 +123,7 @@ int main(int argc, const char *argv[])
         }
 
         // push keypoints and descriptor for current frame to end of data buffer
-        (dataBuffer.end() - 1)->keypoints = keypoints;
+        (dataBuffer.end() - 1)->keypoints = keypoints; // TODO: adjust for queue -- dataBuffer.back()
         cout << "#2 : DETECT KEYPOINTS done" << endl;
 
         /* EXTRACT KEYPOINT DESCRIPTORS */
@@ -129,11 +134,11 @@ int main(int argc, const char *argv[])
 
         cv::Mat descriptors;
         string descriptorType = "BRISK"; // BRIEF, ORB, FREAK, AKAZE, SIFT
-        descKeypoints((dataBuffer.end() - 1)->keypoints, (dataBuffer.end() - 1)->cameraImg, descriptors, descriptorType);
+        descKeypoints((dataBuffer.end() - 1)->keypoints, (dataBuffer.end() - 1)->cameraImg, descriptors, descriptorType); // TODO: adjust for queue -- dataBuffer.back()
         //// EOF STUDENT ASSIGNMENT
 
         // push descriptors for current frame to end of data buffer
-        (dataBuffer.end() - 1)->descriptors = descriptors;
+        (dataBuffer.end() - 1)->descriptors = descriptors; // TODO: adjust for queue -- dataBuffer.back()
 
         cout << "#3 : EXTRACT DESCRIPTORS done" << endl;
 
@@ -150,7 +155,8 @@ int main(int argc, const char *argv[])
             //// STUDENT ASSIGNMENT
             //// TASK MP.5 -> add FLANN matching in file matching2D.cpp
             //// TASK MP.6 -> add KNN match selection and perform descriptor distance ratio filtering with t=0.8 in file matching2D.cpp
-
+            
+            // TODO: adjust for queue -- dataBuffer.back()
             matchDescriptors((dataBuffer.end() - 2)->keypoints, (dataBuffer.end() - 1)->keypoints,
                              (dataBuffer.end() - 2)->descriptors, (dataBuffer.end() - 1)->descriptors,
                              matches, descriptorType, matcherType, selectorType);
@@ -158,7 +164,7 @@ int main(int argc, const char *argv[])
             //// EOF STUDENT ASSIGNMENT
 
             // store matches in current data frame
-            (dataBuffer.end() - 1)->kptMatches = matches;
+            (dataBuffer.end() - 1)->kptMatches = matches; // TODO: adjust for queue -- dataBuffer.back()
 
             cout << "#4 : MATCH KEYPOINT DESCRIPTORS done" << endl;
 
@@ -166,6 +172,7 @@ int main(int argc, const char *argv[])
             bVis = true;
             if (bVis)
             {
+                // TODO: adjust for queue -- dataBuffer.back()
                 cv::Mat matchImg = ((dataBuffer.end() - 1)->cameraImg).clone();
                 cv::drawMatches((dataBuffer.end() - 2)->cameraImg, (dataBuffer.end() - 2)->keypoints,
                                 (dataBuffer.end() - 1)->cameraImg, (dataBuffer.end() - 1)->keypoints,
