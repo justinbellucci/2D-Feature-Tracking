@@ -39,7 +39,7 @@ int main(int argc, const char *argv[])
 
     // misc
     int dataBufferSize = 2;       // no. of images which are held in memory (ring buffer) at the same time
-    std::vector<DataFrame> dataBuffer; // list of data frames which are held in memory at the same time
+    // std::vector<DataFrame> dataBuffer; // list of data frames which are held in memory at the same time
     std::queue<DataFrame> dataBufferQ; // TODO:
     bool bVis = false;            // visualize results
 
@@ -65,12 +65,16 @@ int main(int argc, const char *argv[])
         // push image into data frame buffer
         // DataFrame frame;
         std::unique_ptr<DataFrame> frame(new DataFrame);
+        // frame->cameraImg = imgGray;
         frame->cameraImg = imgGray;
-        // frame.cameraImg = imgGray;
-        dataBuffer.push_back(*frame);
+        if(dataBufferQ.size() >= dataBufferSize)
+        {
+            dataBufferQ.pop();
+        }
+        // dataBuffer.push_back(frame);
         dataBufferQ.emplace(*frame); // TODO: implment a buffer size of dataBufferSize to limit queue capacity
-        // dataBuffer.front()
-        // dataBuffer.pop()
+
+        std::cout << "DataBuffer Size = " << dataBufferQ.size() << std::endl;
 
         //// EOF STUDENT ASSIGNMENT
         cout << "#1 : LOAD IMAGE INTO BUFFER done" << endl;
@@ -123,7 +127,8 @@ int main(int argc, const char *argv[])
         }
 
         // push keypoints and descriptor for current frame to end of data buffer
-        (dataBuffer.end() - 1)->keypoints = keypoints; // TODO: adjust for queue -- dataBuffer.back()
+        // (dataBuffer.end() - 1)->keypoints = keypoints; // TODO: adjust for queue -- dataBuffer.back()
+        dataBufferQ.back().keypoints = keypoints;
         cout << "#2 : DETECT KEYPOINTS done" << endl;
 
         /* EXTRACT KEYPOINT DESCRIPTORS */
@@ -134,15 +139,16 @@ int main(int argc, const char *argv[])
 
         cv::Mat descriptors;
         string descriptorType = "BRISK"; // BRIEF, ORB, FREAK, AKAZE, SIFT
-        descKeypoints((dataBuffer.end() - 1)->keypoints, (dataBuffer.end() - 1)->cameraImg, descriptors, descriptorType); // TODO: adjust for queue -- dataBuffer.back()
+        // descKeypoints((dataBuffer.end() - 1)->keypoints, (dataBuffer.end() - 1)->cameraImg, descriptors, descriptorType); // TODO: adjust for queue -- dataBuffer.back()
+        descKeypoints(dataBufferQ.back().keypoints, dataBufferQ.back().cameraImg, descriptors, descriptorType);
         //// EOF STUDENT ASSIGNMENT
 
         // push descriptors for current frame to end of data buffer
-        (dataBuffer.end() - 1)->descriptors = descriptors; // TODO: adjust for queue -- dataBuffer.back()
-
+        // (dataBuffer.end() - 1)->descriptors = descriptors; // TODO: adjust for queue -- dataBuffer.back()
+        dataBufferQ.back().descriptors = descriptors;
         cout << "#3 : EXTRACT DESCRIPTORS done" << endl;
 
-        if (dataBuffer.size() > 1) // wait until at least two images have been processed
+        if (dataBufferQ.size() > 1) // wait until at least two images have been processed
         {
 
             /* MATCH KEYPOINT DESCRIPTORS */
@@ -157,15 +163,17 @@ int main(int argc, const char *argv[])
             //// TASK MP.6 -> add KNN match selection and perform descriptor distance ratio filtering with t=0.8 in file matching2D.cpp
             
             // TODO: adjust for queue -- dataBuffer.back()
-            matchDescriptors((dataBuffer.end() - 2)->keypoints, (dataBuffer.end() - 1)->keypoints,
-                             (dataBuffer.end() - 2)->descriptors, (dataBuffer.end() - 1)->descriptors,
+            // matchDescriptors((dataBuffer.end() - 2)->keypoints, (dataBuffer.end() - 1)->keypoints,
+            //                  (dataBuffer.end() - 2)->descriptors, (dataBuffer.end() - 1)->descriptors,
+            //                  matches, descriptorType, matcherType, selectorType);
+            matchDescriptors((dataBufferQ.front()).keypoints, (dataBufferQ.back()).keypoints,
+                             (dataBufferQ.front()).descriptors, (dataBufferQ.back()).descriptors,
                              matches, descriptorType, matcherType, selectorType);
-
             //// EOF STUDENT ASSIGNMENT
 
             // store matches in current data frame
-            (dataBuffer.end() - 1)->kptMatches = matches; // TODO: adjust for queue -- dataBuffer.back()
-
+            // (dataBuffer.end() - 1)->kptMatches = matches; // TODO: adjust for queue -- dataBuffer.back()
+            (dataBufferQ.back()).kptMatches = matches;
             cout << "#4 : MATCH KEYPOINT DESCRIPTORS done" << endl;
 
             // visualize matches between current and previous image
@@ -173,9 +181,16 @@ int main(int argc, const char *argv[])
             if (bVis)
             {
                 // TODO: adjust for queue -- dataBuffer.back()
-                cv::Mat matchImg = ((dataBuffer.end() - 1)->cameraImg).clone();
-                cv::drawMatches((dataBuffer.end() - 2)->cameraImg, (dataBuffer.end() - 2)->keypoints,
-                                (dataBuffer.end() - 1)->cameraImg, (dataBuffer.end() - 1)->keypoints,
+                // cv::Mat matchImg = ((dataBuffer.end() - 1)->cameraImg).clone();
+                // cv::drawMatches((dataBuffer.end() - 2)->cameraImg, (dataBuffer.end() - 2)->keypoints,
+                //                 (dataBuffer.end() - 1)->cameraImg, (dataBuffer.end() - 1)->keypoints,
+                //                 matches, matchImg,
+                //                 cv::Scalar::all(-1), cv::Scalar::all(-1),
+                //                 vector<char>(), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+
+                cv::Mat matchImg = ((dataBufferQ.back()).cameraImg).clone();
+                cv::drawMatches((dataBufferQ.front()).cameraImg, (dataBufferQ.front()).keypoints,
+                                (dataBufferQ.back()).cameraImg, (dataBufferQ.back()).keypoints,
                                 matches, matchImg,
                                 cv::Scalar::all(-1), cv::Scalar::all(-1),
                                 vector<char>(), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
