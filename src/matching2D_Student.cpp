@@ -182,21 +182,44 @@ void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool
 // Modern Keypoint Detectors. FAST, BRISK, ORB, AKAZE, SIFT
 void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std::string detectorType, bool bVis)
 {
-    // parameters
-    int threshold = 30; // difference between intensity of the central pixel and pixels of a circle around this pixel
-    bool NMS = true;
-
+    
     // FAST detector
     if(detectorType.compare("FAST") == 0)
     {
-        cv::Ptr<cv::FastFeatureDetector> detector = cv::FastFeatureDetector::create(threshold, NMS);
-        // time detector execution
+        // FAST parameters
+        int threshold = 30; // difference between intensity of the central pixel and pixels of a circle around this pixel
+        bool NMS = true;
+        cv::Ptr<cv::FastFeatureDetector> detector = cv::FastFeatureDetector::create(threshold, NMS); 
+        
         double t =(double)cv::getTickCount();
         detector->detect(img, keypoints, img);
         t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
         std::cout << "FAST Feature Detector with n = " << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms." << std::endl;
     }
+    // BRISK detector
+    else if(detectorType.compare("BRISK") == 0)
+    {
+        cv::Ptr<cv::FeatureDetector> detector = cv::BRISK::create();
+        
+        double t =(double)cv::getTickCount();
+        detector->detect(img, keypoints);
+        t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+        std::cout << "BRISK Feature Detector with n = " << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms." << std::endl;
+    }
+    // ORB detector
+    else if(detectorType.compare("ORB") == 0)
+    {
+        cv::Ptr<cv::FeatureDetector> detector = cv::ORB::create();
+        double t = (double)cv::getTickCount();
+        detector->detect(img, keypoints);
+        t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+        std::cout << "ORB Feature Detector with n = " << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms." << std::endl;
+    }
+    else
+    {
 
+    }
+    
     // visualize results
     if(bVis)
     {
