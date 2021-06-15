@@ -179,7 +179,7 @@ void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool
     }
 }
 
-// Modern Keypoint Detectors. FAST, BRISK, ORB, AKAZE, SIFT
+// Modern Keypoint Detectors. FAST, BRISK, ORB, AKAZE, SIFT, FREAK
 void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std::string detectorType, bool bVis)
 {
     
@@ -233,7 +233,7 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
         t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
         std::cout << "AKAZE Feature Detector with n = " << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms." << std::endl;
     }
-    
+   
     // visualize results
     if(bVis)
     {
