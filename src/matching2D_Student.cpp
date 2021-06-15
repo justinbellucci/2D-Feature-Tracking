@@ -178,3 +178,33 @@ void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool
         cv::waitKey(0);
     }
 }
+
+// Modern Keypoint Detectors. FAST, BRISK, ORB, AKAZE, SIFT
+void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std::string detectorType, bool bVis)
+{
+    // parameters
+    int threshold = 30; // difference between intensity of the central pixel and pixels of a circle around this pixel
+    bool NMS = true;
+
+    // FAST detector
+    if(detectorType.compare("FAST") == 0)
+    {
+        cv::Ptr<cv::FastFeatureDetector> detector = cv::FastFeatureDetector::create(threshold, NMS);
+        // time detector execution
+        double t =(double)cv::getTickCount();
+        detector->detect(img, keypoints, img);
+        t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+        std::cout << "FAST Feature Detector with n = " << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms." << std::endl;
+    }
+
+    // visualize results
+    if(bVis)
+    {
+        string windowName = detectorType;
+        cv::namedWindow(windowName, 6);
+        cv::Mat visImg = img.clone();
+        cv::drawKeypoints(img, keypoints, visImg, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+        cv::imshow(windowName, visImg);
+        cv::waitKey(0);
+    }
+}
