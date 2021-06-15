@@ -41,7 +41,9 @@ int main(int argc, const char *argv[])
     int dataBufferSize = 2;       // no. of images which are held in memory (ring buffer) at the same time
     // std::vector<DataFrame> dataBuffer; // list of data frames which are held in memory at the same time
     std::queue<DataFrame> dataBufferQ; // TODO:
-    bool bVis = false;            // visualize results
+    bool bVis = true;            // visualize results
+    bool bFocusOnVehicle = true;
+    cv::Rect vehicleRect(535, 180, 180, 150); // x, y, w, h
 
     /* MAIN LOOP OVER ALL IMAGES */
 
@@ -92,15 +94,15 @@ int main(int argc, const char *argv[])
 
         if (detectorType.compare("SHITOMASI") == 0)
         {
-            detKeypointsShiTomasi(keypoints, imgGray, false);
+            detKeypointsShiTomasi(keypoints, imgGray, bVis);
         }
         else if (detectorType.compare("HARRIS") == 0)
         {
-            detKeypointsHarris(keypoints, imgGray, true);
+            detKeypointsHarris(keypoints, imgGray, bVis);
         }
         else
         {
-            detKeypointsModern(keypoints, imgGray, detectorType, true);
+            detKeypointsModern(keypoints, imgGray, detectorType, bVis);
         }
         //// EOF STUDENT ASSIGNMENT
 
@@ -108,11 +110,18 @@ int main(int argc, const char *argv[])
         //// TASK MP.3 -> only keep keypoints on the preceding vehicle
 
         // only keep keypoints on the preceding vehicle
-        bool bFocusOnVehicle = true;
-        cv::Rect vehicleRect(535, 180, 180, 150);
         if (bFocusOnVehicle)
         {
-            // ...
+            std::vector<cv::KeyPoint> vehicleKeyPoints;
+            for(auto it = keypoints.begin(); it < keypoints.end(); ++it)
+            {
+                if((it->pt.x >= vehicleRect.x && it->pt.x <= (vehicleRect.x + vehicleRect.width)) && 
+                   (it->pt.y >= vehicleRect.y && it->pt.y <= (vehicleRect.y + vehicleRect.height)))
+                {
+                    vehicleKeyPoints.push_back(*it);
+                }
+            }
+            keypoints = vehicleKeyPoints;
         }
 
         //// EOF STUDENT ASSIGNMENT
@@ -128,13 +137,13 @@ int main(int argc, const char *argv[])
                 keypoints.erase(keypoints.begin() + maxKeypoints, keypoints.end());
             }
             cv::KeyPointsFilter::retainBest(keypoints, maxKeypoints);
-            cout << " NOTE: Keypoints have been limited!" << endl;
+            std::cout << " NOTE: Keypoints have been limited!" << std::endl;
         }
 
         // push keypoints and descriptor for current frame to end of data buffer
         // (dataBuffer.end() - 1)->keypoints = keypoints; // TODO: adjust for queue -- dataBuffer.back()
         dataBufferQ.back().keypoints = keypoints;
-        cout << "#2 : DETECT KEYPOINTS done" << endl;
+        std::cout << "#2 : DETECT KEYPOINTS done" << std::endl;
 
         /* EXTRACT KEYPOINT DESCRIPTORS */
 
