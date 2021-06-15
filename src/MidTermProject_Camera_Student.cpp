@@ -84,7 +84,7 @@ int main(int argc, const char *argv[])
         // extract 2D keypoints from current image
         vector<cv::KeyPoint> keypoints; // create empty feature list for current image
         // string detectorType = "HARRIS"; // Classic Detectors -> SHITOMASI, HARRIS
-        string detectorType = "ORB"; // Modern Detectors -> FAST, BRISK, ORB, KAZE, SIFT
+        string detectorType = "AKAZE"; // Modern Detectors -> FAST, BRISK, ORB, AKAZE, SIFT
 
         //// STUDENT ASSIGNMENT
         //// TASK MP.2 -> add the following keypoint detectors in file matching2D.cpp and enable string-based selection based on detectorType

@@ -215,9 +215,23 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
         t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
         std::cout << "ORB Feature Detector with n = " << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms." << std::endl;
     }
+    // SIFT detector
+    else if(detectorType.compare("SIFT") == 0)
+    {
+        cv::Ptr<cv::FeatureDetector> detector = cv::SIFT::create();
+        double t = (double)cv::getTickCount();
+        detector->detect(img, keypoints);
+        t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+        std::cout << "SIFT Feature Detector with n = " << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms." << std::endl;
+    }
+    // AKAZE detector. NOTE -> ONLY can use AKAZE descriptor excractor and descriptors with AKAZE keypoints
     else
     {
-
+        cv::Ptr<cv::FeatureDetector> detector = cv::AKAZE::create();
+        double t = (double)cv::getTickCount();
+        detector->detect(img, keypoints);
+        t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+        std::cout << "AKAZE Feature Detector with n = " << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms." << std::endl;
     }
     
     // visualize results
