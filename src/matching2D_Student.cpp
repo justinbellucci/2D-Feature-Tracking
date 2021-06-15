@@ -141,22 +141,22 @@ void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool
 
                 bool isOverlap = false;
 
-                // // perform NMS to reduce the number of keypoints displayed
-                // for(auto it = keypoints.begin(); it < keypoints.end(); ++i)
-                // {
-                //     // calculate overlap. No overlap == 0
-                //     double keyPtOverlap = cv::KeyPoint::overlap(newKeyPoint, *it);
-                //     if(keyPtOverlap > maxOverlap)
-                //         {
-                //             isOverlap = true;
-                //             // if overlap check response
-                //             if(newKeyPoint.response > it->response)
-                //             {
-                //                 *it = newKeyPoint;
-                //                 break;
-                //             }
-                //         }
-                // }
+                // perform NMS to reduce the number of keypoints displayed
+                for(auto it = keypoints.begin(); it < keypoints.end(); ++it)
+                {
+                    // calculate overlap. No overlap == 0
+                    double keyPtOverlap = cv::KeyPoint::overlap(newKeyPoint, *it);
+                    if(keyPtOverlap > maxOverlap)
+                        {
+                            isOverlap = true;
+                            // if overlap check response
+                            if(newKeyPoint.response > it->response)
+                            {
+                                *it = newKeyPoint;
+                                break;
+                            }
+                        }
+                }
                 // if no overlap add new keypoint 
                 if(!isOverlap)
                     keypoints.push_back(newKeyPoint);

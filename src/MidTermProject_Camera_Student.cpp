@@ -209,7 +209,7 @@ int main(int argc, const char *argv[])
             bVis = false;
         }
 
-    } // eof loop over all images
+    } // end of loop over all images
 
     return 0;
 }
