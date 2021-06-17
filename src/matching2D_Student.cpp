@@ -136,7 +136,7 @@ void detKeypointsShiTomasi(vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool b
         keypoints.push_back(newKeyPoint);
     }
     t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
-    cout << "     Shi-Tomasi detection with n =" << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
+    std::cout << "     Shi-Tomasi detection with n =" << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms." << std::endl;
 
     // visualize results
     if (bVis)
@@ -213,7 +213,7 @@ void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool
     } // end of loop over rows
 
     t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
-    std::cout << "     Harris detection with n =" << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << std::endl;
+    std::cout << "     Harris detection with n =" << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms." << std::endl;
 
     // visualize results
     if(bVis)
@@ -242,7 +242,7 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
         double t =(double)cv::getTickCount();
         detector->detect(img, keypoints, img);
         t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
-        std::cout << "     FAST Feature Detector with n = " << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms." << std::endl;
+        std::cout << "     FAST feature detector with n = " << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms." << std::endl;
     }
     // BRISK detector
     else if(detectorType.compare("BRISK") == 0)
@@ -252,7 +252,7 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
         double t =(double)cv::getTickCount();
         detector->detect(img, keypoints);
         t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
-        std::cout << "     BRISK Feature Detector with n = " << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms." << std::endl;
+        std::cout << "     BRISK feature detector with n = " << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms." << std::endl;
     }
     // ORB detector
     else if(detectorType.compare("ORB") == 0)
@@ -261,7 +261,7 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
         double t = (double)cv::getTickCount();
         detector->detect(img, keypoints);
         t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
-        std::cout << "     ORB Feature Detector with n = " << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms." << std::endl;
+        std::cout << "     ORB feature detector with n = " << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms." << std::endl;
     }
     // SIFT detector
     else if(detectorType.compare("SIFT") == 0)
@@ -270,7 +270,7 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
         double t = (double)cv::getTickCount();
         detector->detect(img, keypoints);
         t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
-        std::cout << "     SIFT Feature Detector with n = " << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms." << std::endl;
+        std::cout << "     SIFT feature detector with n = " << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms." << std::endl;
     }
     // AKAZE detector. NOTE -> ONLY can use AKAZE descriptor excractor and descriptors with AKAZE keypoints
     else
@@ -279,7 +279,7 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
         double t = (double)cv::getTickCount();
         detector->detect(img, keypoints);
         t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
-        std::cout << "     AKAZE Feature Detector with n = " << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms." << std::endl;
+        std::cout << "     AKAZE feature detector with n = " << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms." << std::endl;
     }
    
     // visualize results

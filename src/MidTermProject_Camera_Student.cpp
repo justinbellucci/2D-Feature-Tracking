@@ -41,8 +41,9 @@ int main(int argc, const char *argv[])
     int dataBufferSize = 2;       // no. of images which are held in memory (ring buffer) at the same time
     std::queue<DataFrame> dataBufferQ; // TODO:
     bool bVis = false;            // visualize results
-    bool bFocusOnVehicle = false;
+    bool bFocusOnVehicle = true;
     cv::Rect vehicleRect(535, 180, 180, 150); // x, y, w, h
+    bool bLimitKpts = false; // limit number of keypoints (helpful for debugging and learning)
 
     // keypoints and descriptors
     // string detectorType = "HARRIS"; // Classic Detectors -> SHITOMASI, HARRIS
@@ -113,9 +114,9 @@ int main(int argc, const char *argv[])
                 }
             }
             keypoints = vehicleKeyPoints;
+            std::cout << "     Vehicle keypoint count = " << vehicleKeyPoints.size() << std::endl;
         }
-        // limit number of keypoints (helpful for debugging and learning)
-        bool bLimitKpts = true;
+        
         if (bLimitKpts)
         {
             int maxKeypoints = 50;
