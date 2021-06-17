@@ -41,7 +41,7 @@ int main(int argc, const char *argv[])
     int dataBufferSize = 2;       // no. of images which are held in memory (ring buffer) at the same time
     std::queue<DataFrame> dataBufferQ; // TODO:
     bool bVis = false;            // visualize results
-    bool bFocusOnVehicle = true;
+    bool bFocusOnVehicle = false;
     cv::Rect vehicleRect(535, 180, 180, 150); // x, y, w, h
 
     // keypoints and descriptors
@@ -149,7 +149,7 @@ int main(int argc, const char *argv[])
             vector<cv::DMatch> matches;
             string matcherType = "MAT_FLANN";        // MAT_BF, MAT_FLANN
             string descriptorType = "DES_BINARY"; // DES_BINARY, DES_HOG
-            string selectorType = "SEL_NN";       // SEL_NN, SEL_KNN
+            string selectorType = "SEL_KNN";       // SEL_NN, SEL_KNN
 
             //// TASK MP.6 -> add KNN match selection and perform descriptor distance ratio filtering with t=0.8 in file matching2D.cpp
         
