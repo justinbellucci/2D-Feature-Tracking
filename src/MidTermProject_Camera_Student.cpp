@@ -45,6 +45,11 @@ int main(int argc, const char *argv[])
     bool bFocusOnVehicle = true;
     cv::Rect vehicleRect(535, 180, 180, 150); // x, y, w, h
 
+    // keypoints and descriptors
+    // string detectorType = "HARRIS"; // Classic Detectors -> SHITOMASI, HARRIS
+    std::string detectorType = "BRISK"; // Modern Detectors -> FAST, BRISK, ORB, AKAZE, SIFT
+    std::string descriptorType = "BRISK"; // BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT
+
     /* MAIN LOOP OVER ALL IMAGES */
 
     for (size_t imgIndex = 0; imgIndex <= imgEndIndex - imgStartIndex; imgIndex++)
@@ -76,7 +81,7 @@ int main(int argc, const char *argv[])
         // dataBuffer.push_back(frame);
         dataBufferQ.emplace(*frame); // TODO: implment a buffer size of dataBufferSize to limit queue capacity
 
-        std::cout << "DataBuffer Size = " << dataBufferQ.size() << std::endl;
+        std::cout << "---- DataBuffer Size = " << dataBufferQ.size() << std::endl;
 
         //// EOF STUDENT ASSIGNMENT
         cout << "#1 : LOAD IMAGE INTO BUFFER done" << endl;
@@ -86,7 +91,7 @@ int main(int argc, const char *argv[])
         // extract 2D keypoints from current image
         vector<cv::KeyPoint> keypoints; // create empty feature list for current image
         // string detectorType = "HARRIS"; // Classic Detectors -> SHITOMASI, HARRIS
-        std::string detectorType = "AKAZE"; // Modern Detectors -> FAST, BRISK, ORB, AKAZE, SIFT
+        // std::string detectorType = "FAST"; // Modern Detectors -> FAST, BRISK, ORB, AKAZE, SIFT
 
         //// STUDENT ASSIGNMENT
         //// TASK MP.2 -> add the following keypoint detectors in file matching2D.cpp and enable string-based selection based on detectorType
@@ -137,13 +142,13 @@ int main(int argc, const char *argv[])
                 keypoints.erase(keypoints.begin() + maxKeypoints, keypoints.end());
             }
             cv::KeyPointsFilter::retainBest(keypoints, maxKeypoints);
-            std::cout << " NOTE: Keypoints have been limited!" << std::endl;
+            std::cout << "     NOTE: Keypoints have been limited!" << std::endl;
         }
 
         // push keypoints and descriptor for current frame to end of data buffer
         // (dataBuffer.end() - 1)->keypoints = keypoints; // TODO: adjust for queue -- dataBuffer.back()
         dataBufferQ.back().keypoints = keypoints;
-        std::cout << "#2 : DETECT KEYPOINTS done" << std::endl;
+        std::cout << "#2 : DETECT KEYPOINTS Done." << std::endl;
 
         /* EXTRACT KEYPOINT DESCRIPTORS */
 
@@ -153,7 +158,7 @@ int main(int argc, const char *argv[])
 
         cv::Mat descriptors;
         // TODO: Add check for AKAZE keypoints when using AKAZE descriptor type
-        string descriptorType = "AKAZE"; // BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT
+        // string descriptorType = "ORB"; // BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT
         // descKeypoints((dataBuffer.end() - 1)->keypoints, (dataBuffer.end() - 1)->cameraImg, descriptors, descriptorType); // TODO: adjust for queue -- dataBuffer.back()
         descKeypoints(dataBufferQ.back().keypoints, dataBufferQ.back().cameraImg, descriptors, descriptorType);
         //// EOF STUDENT ASSIGNMENT
@@ -161,7 +166,7 @@ int main(int argc, const char *argv[])
         // push descriptors for current frame to end of data buffer
         // (dataBuffer.end() - 1)->descriptors = descriptors; // TODO: adjust for queue -- dataBuffer.back()
         dataBufferQ.back().descriptors = descriptors;
-        cout << "#3 : EXTRACT DESCRIPTORS done" << endl;
+        cout << "#3 : EXTRACT DESCRIPTORS Done." << endl;
 
         if (dataBufferQ.size() > 1) // wait until at least two images have been processed
         {
@@ -176,8 +181,7 @@ int main(int argc, const char *argv[])
             //// STUDENT ASSIGNMENT
             //// TASK MP.5 -> add FLANN matching in file matching2D.cpp
             //// TASK MP.6 -> add KNN match selection and perform descriptor distance ratio filtering with t=0.8 in file matching2D.cpp
-            
-            // TODO: adjust for queue -- dataBuffer.back()
+          
             // matchDescriptors((dataBuffer.end() - 2)->keypoints, (dataBuffer.end() - 1)->keypoints,
             //                  (dataBuffer.end() - 2)->descriptors, (dataBuffer.end() - 1)->descriptors,
             //                  matches, descriptorType, matcherType, selectorType);
