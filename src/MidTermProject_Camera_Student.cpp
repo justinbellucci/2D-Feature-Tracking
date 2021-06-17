@@ -46,8 +46,8 @@ int main(int argc, const char *argv[])
     bool bLimitKpts = false; // limit number of keypoints (helpful for debugging and learning)
 
     // keypoints and descriptors
-    // string detectorType = "HARRIS"; // Classic Detectors -> SHITOMASI, HARRIS
-    std::string detectorType = "BRISK"; // Modern Detectors -> FAST, BRISK, ORB, AKAZE, SIFT
+    string detectorType = "HARRIS"; // Classic Detectors -> SHITOMASI, HARRIS
+    // std::string detectorType = "BRISK"; // Modern Detectors -> FAST, BRISK, ORB, AKAZE, SIFT
     std::string descriptorType = "SIFT"; // BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT
 
     /* MAIN LOOP OVER ALL IMAGES */
@@ -151,9 +151,7 @@ int main(int argc, const char *argv[])
             string matcherType = "MAT_FLANN";        // MAT_BF, MAT_FLANN
             string descriptorType = "DES_BINARY"; // DES_BINARY, DES_HOG
             string selectorType = "SEL_KNN";       // SEL_NN, SEL_KNN
-
-            //// TASK MP.6 -> add KNN match selection and perform descriptor distance ratio filtering with t=0.8 in file matching2D.cpp
-        
+    
             matchDescriptors((dataBufferQ.front()).keypoints, (dataBufferQ.back()).keypoints,
                              (dataBufferQ.front()).descriptors, (dataBufferQ.back()).descriptors,
                              matches, descriptorType, matcherType, selectorType);
