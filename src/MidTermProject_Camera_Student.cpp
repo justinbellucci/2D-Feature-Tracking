@@ -49,7 +49,7 @@ int main(int argc, const char *argv[])
     std::vector<int> vehicleKeypointList;
     // keypoints and descriptors
     // string detectorType = "SHITOMASI"; // Classic Detectors -> SHITOMASI, HARRIS
-    std::string detectorType = "SIFT"; // Modern Detectors -> FAST, BRISK, ORB, AKAZE, SIFT
+    std::string detectorType = "BRISK"; // Modern Detectors -> FAST, BRISK, ORB, AKAZE, SIFT
     std::string descriptorType = "FREAK"; // BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT
 
     /* MAIN LOOP OVER ALL IMAGES */
