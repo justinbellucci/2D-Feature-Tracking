@@ -39,7 +39,7 @@ int main(int argc, const char *argv[])
 
     // misc
     int dataBufferSize = 2;       // no. of images which are held in memory (ring buffer) at the same time
-    std::queue<DataFrame> dataBufferQ; // TODO:
+    std::queue<DataFrame> dataBufferQ; 
     bool bVis = false;            // visualize results
     bool bFocusOnVehicle = true;
     cv::Rect vehicleRect(535, 180, 180, 150); // x, y, w, h
