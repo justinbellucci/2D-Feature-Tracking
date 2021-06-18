@@ -45,10 +45,12 @@ int main(int argc, const char *argv[])
     cv::Rect vehicleRect(535, 180, 180, 150); // x, y, w, h
     bool bLimitKpts = false; // limit number of keypoints (helpful for debugging and learning)
 
+    // counting variables
+    std::vector<int> vehicleKeypointList;
     // keypoints and descriptors
-    string detectorType = "HARRIS"; // Classic Detectors -> SHITOMASI, HARRIS
-    // std::string detectorType = "BRISK"; // Modern Detectors -> FAST, BRISK, ORB, AKAZE, SIFT
-    std::string descriptorType = "SIFT"; // BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT
+    // string detectorType = "SHITOMASI"; // Classic Detectors -> SHITOMASI, HARRIS
+    std::string detectorType = "SIFT"; // Modern Detectors -> FAST, BRISK, ORB, AKAZE, SIFT
+    std::string descriptorType = "FREAK"; // BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT
 
     /* MAIN LOOP OVER ALL IMAGES */
 
@@ -85,8 +87,6 @@ int main(int argc, const char *argv[])
 
         // extract 2D keypoints from current image
         vector<cv::KeyPoint> keypoints; // create empty feature list for current image
-        // string detectorType = "HARRIS"; // Classic Detectors -> SHITOMASI, HARRIS
-        // std::string detectorType = "FAST"; // Modern Detectors -> FAST, BRISK, ORB, AKAZE, SIFT
 
         if (detectorType.compare("SHITOMASI") == 0)
         {
@@ -115,6 +115,7 @@ int main(int argc, const char *argv[])
             }
             keypoints = vehicleKeyPoints;
             std::cout << "     Vehicle keypoint count = " << vehicleKeyPoints.size() << std::endl;
+            vehicleKeypointList.push_back(vehicleKeyPoints.size());
         }
         
         if (bLimitKpts)
@@ -148,7 +149,7 @@ int main(int argc, const char *argv[])
             /* MATCH KEYPOINT DESCRIPTORS */
             bVis = true;
             vector<cv::DMatch> matches;
-            string matcherType = "MAT_FLANN";        // MAT_BF, MAT_FLANN
+            string matcherType = "MAT_BF";        // MAT_BF, MAT_FLANN
             string descriptorType = "DES_BINARY"; // DES_BINARY, DES_HOG
             string selectorType = "SEL_KNN";       // SEL_NN, SEL_KNN
     
@@ -182,5 +183,12 @@ int main(int argc, const char *argv[])
 
     } // end of loop over all images
 
+    // Print detector and descriptor comparison results
+    std::cout << "Vehicle keypoint count : ";
+    for(int i=0; i < vehicleKeypointList.size(); i++)
+    {
+        std::cout << vehicleKeypointList.at(i) << " ";
+    }
+    
     return 0;
 }

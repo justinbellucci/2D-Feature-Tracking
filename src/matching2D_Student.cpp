@@ -3,6 +3,7 @@
 
 using namespace std;
 
+
 // Find best matches for keypoints in two camera images based on several matching methods
 void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::KeyPoint> &kPtsRef, cv::Mat &descSource, cv::Mat &descRef,
                       std::vector<cv::DMatch> &matches, std::string descriptorType, std::string matcherType, std::string selectorType)
@@ -10,6 +11,7 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
     // configure matcher
     bool crossCheck = false;
     cv::Ptr<cv::DescriptorMatcher> matcher;
+    std::vector<int> matchCountList;
 
     if (matcherType.compare("MAT_BF") == 0)
     {
@@ -57,7 +59,9 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
         }
         std::cout << "     Descriptor distance ratio filtering removed " << knnMatches.size() - matches.size() 
                   << " keypoints." << std::endl;
+    
     }
+    
 }
 
 // Use one of several types of state-of-art descriptors to uniquely identify keypoints
@@ -102,7 +106,7 @@ void descKeypoints(vector<cv::KeyPoint> &keypoints, cv::Mat &img, cv::Mat &descr
         extractor = cv::SiftDescriptorExtractor::create();
     }
 
-    // perform feature description
+    // perform feature extraction
     double t = (double)cv::getTickCount();
     extractor->compute(img, keypoints, descriptors);
     t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
