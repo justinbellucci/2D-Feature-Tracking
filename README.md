@@ -2,37 +2,42 @@
 
 <img src="images/keypoints.png" width="820" height="248" />
 
-The idea of the camera course is to build a collision detection system - that's the overall goal for the Final Project. As a preparation for this, you will now build the feature tracking part and test various detector / descriptor combinations to see which ones perform best. This mid-term project consists of four parts:
+In preparation for building a collision detection system, this project tests various keypoint detector and descriptor combinations to see which one performs the best. Implemented in OpenCV the following keypoint deetectors were tested:  
+* **Gradient-based detectors** -> Shi-Tomasi, Harris, SIFT
+* **Binary detectors** -> FAST, BRISK, ORB, AKAZE, BRIEF
 
-* First, you will focus on loading images, setting up data structures and putting everything into a ring buffer to optimize memory load. 
-* Then, you will integrate several keypoint detectors such as HARRIS, FAST, BRISK and SIFT and compare them with regard to number of keypoints and speed. 
-* In the next part, you will then focus on descriptor extraction and matching using brute force and also the FLANN approach we discussed in the previous lesson. 
-* In the last part, once the code framework is complete, you will test the various algorithms in different combinations and compare them with regard to some performance measures. 
+Along with the following descriptor extractors:
+* **Gradient-based descriptors** -> SIFT
+* **Binary descriptors** -> BRISK, ORB, AKAZE, BRIEF, FREAK
 
-See the classroom instruction and code comments for more details on each of these parts. Once you are finished with this project, the keypoint matching part will be set up and you can proceed to the next lesson, where the focus is on integrating Lidar points and on object detection using deep-learning. 
+## Rubric Items Addressed 
+_MP.1 Data Buffer Optimization_ - This is done by implenting a standard queue. Line 72 in MidTermProject_Camera_Student.cpp 
+
+_MP.2 Keypoint Detection_ - Modern and classic detectors are implemented in matching2D_Student.cpp starting on line 116.  
+
+_MP.3 Keypoint Removal_ - Keypoints are removed outside a pre-defined recatangle on line 104 in MidTermProject_Camera_Student.cpp  
+
+_MP.4 Keypoint Descriptors_ - Keypoint descriptors are implemented in matching2D_Student.cpp starting on line 67.  
+
+_MP.5 Descriptor Matching_ - FLANN and kNN selection methods implemented in matching2D_Student.cpp starting on line 7.  
+
+_MP.6 Descriptor Distance Ratio_ - Filter keypoints implemented in matching2D_Student.cpp starting on line 50.
+
+
 
 ## Dependencies for Running Locally
-1. cmake >= 2.8
- * All OSes: [click here for installation instructions](https://cmake.org/install/)
-
-2. make >= 4.1 (Linux, Mac), 3.81 (Windows)
- * Linux: make is installed by default on most Linux distros
- * Mac: [install Xcode command line tools to get make](https://developer.apple.com/xcode/features/)
- * Windows: [Click here for installation instructions](http://gnuwin32.sourceforge.net/packages/make.htm)
-
-3. OpenCV >= 4.1
- * All OSes: refer to the [official instructions](https://docs.opencv.org/master/df/d65/tutorial_table_of_content_introduction.html)
- * This must be compiled from source using the `-D OPENCV_ENABLE_NONFREE=ON` cmake flag for testing the SIFT and SURF detectors. If using [homebrew](https://brew.sh/): `$> brew install --build-from-source opencv` will install required dependencies and compile opencv with the `opencv_contrib` module by default (no need to set `-DOPENCV_ENABLE_NONFREE=ON` manually). 
- * The OpenCV 4.1.0 source code can be found [here](https://github.com/opencv/opencv/tree/4.1.0)
-
-4. gcc/g++ >= 5.4
+The following dependencies are required to run the program locally.
+* cmake >= 3.17
+  * All OSes: [click here for installation instructions](https://cmake.org/install/)
+* make >= 4.3 (Linux, Mac)
+  * Linux: make is installed by default on most Linux distros
+  * Mac: [install Xcode command line tools to get make](https://developer.apple.com/xcode/features/)
+* OpenCV >= 4.5
+  * The OpenCV 4.5 source code can be found [here](https://github.com/opencv/opencv/tree/4.1.0)
+* gcc/g++ >= 5.4
   * Linux: gcc / g++ is installed by default on most Linux distros
   * Mac: same deal as make - [install Xcode command line tools](https://developer.apple.com/xcode/features/)
-  * Windows: recommend using either [MinGW-w64](http://mingw-w64.org/doku.php/start) or [Microsoft's VCPKG, a C++ package manager](https://docs.microsoft.com/en-us/cpp/build/install-vcpkg?view=msvc-160&tabs=windows). VCPKG maintains its own binary distributions of OpenCV and many other packages. To see what packages are available, type `vcpkg search` at the command prompt. For example, once you've _VCPKG_ installed, you can install _OpenCV 4.1_ with the command:
-```bash
-c:\vcpkg> vcpkg install opencv4[nonfree,contrib]:x64-windows
-```
-Then, add *C:\vcpkg\installed\x64-windows\bin* and *C:\vcpkg\installed\x64-windows\debug\bin* to your user's _PATH_ variable. Also, set the _CMake Toolchain File_ to *c:\vcpkg\scripts\buildsystems\vcpkg.cmake*.
+* NOTE: This project is tested using Mac OSX 10.15
 
 
 ## Basic Build Instructions
